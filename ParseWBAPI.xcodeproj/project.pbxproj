@@ -16,6 +16,7 @@
 		2B397925275A281B0033D1DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B397923275A281B0033D1DC /* LaunchScreen.storyboard */; };
 		2B39792D275A2D0D0033D1DC /* WBViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B39792C275A2D0D0033D1DC /* WBViewController.swift */; };
 		2B39792F275A2E2F0033D1DC /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B39792E275A2E2F0033D1DC /* APIManager.swift */; };
+		2B397931275A3E560033D1DC /* Schemas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B397930275A3E560033D1DC /* Schemas.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		2B397926275A281B0033D1DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B39792C275A2D0D0033D1DC /* WBViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBViewController.swift; sourceTree = "<group>"; };
 		2B39792E275A2E2F0033D1DC /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		2B397930275A3E560033D1DC /* Schemas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schemas.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				2B39791E275A28180033D1DC /* ParseWBAPI.xcdatamodeld */,
 				2B39792C275A2D0D0033D1DC /* WBViewController.swift */,
 				2B39792E275A2E2F0033D1DC /* APIManager.swift */,
+				2B397930275A3E560033D1DC /* Schemas.swift */,
 			);
 			path = ParseWBAPI;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B39792F275A2E2F0033D1DC /* APIManager.swift in Sources */,
+				2B397931275A3E560033D1DC /* Schemas.swift in Sources */,
 				2B39791A275A28180033D1DC /* ViewController.swift in Sources */,
 				2B397920275A28180033D1DC /* ParseWBAPI.xcdatamodeld in Sources */,
 				2B397916275A28180033D1DC /* AppDelegate.swift in Sources */,

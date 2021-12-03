@@ -7,10 +7,15 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
 
     var tableView = UITableView()
     let identifire = "cell"
+    let sessionConfiguration = URLSessionConfiguration.default
+    let session = URLSession.shared
+    let decoder = JSONDecoder()
+    var dataSource = [Product]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         createTable()
+        getProduct(productId: productId)
     }
     
     func createTable() {
@@ -18,15 +23,14 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.identifire)
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
         tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
         view.addSubview(tableView)
+        
     }
     
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100.0
+        return 50.0
     }
     
     // MARK: - UITableViewDataSource
@@ -35,25 +39,39 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 3
-        case 1:
-            return 5
-        case 2:
-            return 8
-        default:
-            break
-        }
-        return 0
+        
+        return dataSource.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifire, for: indexPath)
-        cell.textLabel?.text = "jfgjejnblj"
-        
-        
+        let product = dataSource[indexPath.row]
+        cell.textLabel?.text = product.name
+        cell.detailTextLabel?.text = String(product.priceU)
         return cell
+    }
+    
+    func getProduct(productId: String) {
+        guard let urlData = URL(string: "https://wbxcatalog-ru.wildberries.ru/nm-2-card/catalog?spp=3&lang=ru&curr=rub&offlineBonus=0&onlineBonus=0&emp=0&locale=ru&nm=\(productId)") else {return}
+        
+        session.dataTask(with: urlData) { [weak self] (data, response, error) in
+            guard let strongSelf = self else {return}
+            
+            if error == nil, let parsData = data {
+                
+                guard let welcome = try? strongSelf.decoder.decode(Welcome.self, from: parsData) else {return}
+                strongSelf.dataSource = welcome.data.products
+                
+                // Запускам в главном потоке
+                DispatchQueue.main.async {
+                    strongSelf.tableView.reloadData()
+                }
+                
+            }
+            else {
+                print("Error \(error?.localizedDescription)")
+            }
+        }.resume()
     }
     
 }
