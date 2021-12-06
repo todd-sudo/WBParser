@@ -40,13 +40,22 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 11
+        return 12
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
         let cell = tableView.dequeueReusableCell(withIdentifier: identifire, for: indexPath)
         let product = dataSource.first
+        
+        var qty = 0
+        let sizes = product?.sizes ?? []
+        for size in sizes{
+            for stock in size.stocks {
+                qty += stock.qty
+            }
+        }
+        
         let objects = [
             "Название - \(product?.name ?? "-")",
             "Бренд - \(product?.brand ?? "-")",
@@ -59,6 +68,7 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "Рейтинг - \(product?.rating ?? 0) звезд",
             "Кол-во отзывов - \(product?.feedbacks ?? 0) отзывов",
             "Цвет - \(product?.colors[0].name ?? "-")",
+            "Всего товаров - \(qty) штук",
         ]
         cell.textLabel?.text = objects[indexPath.row]
         return cell
