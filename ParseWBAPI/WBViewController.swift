@@ -40,7 +40,7 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 11
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -52,15 +52,13 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
             "Бренд - \(product?.brand ?? "-")",
             "Скидка - \(product?.sale ?? 0)%",
             "Промокод - \(product?.extended.promoSale ?? 0)%",
-            "Базовая цена - \(product?.priceU ?? 0) рублей",
-            "Цена со скидкой - \(product?.extended.basicPriceU ?? 0) рублей",
-            "Конечная цена - \(product?.salePriceU ?? 0) рублей",
-            "Цена с промокодом - \(product?.extended.promoPriceU ?? 0) рублей",
-            "Рейтинг - \(product?.rating ?? 0)",
-            "Кол-во отзывов\(product?.feedbacks ?? 0)",
+            "Базовая цена - \((product?.priceU ?? 0) / 100) рублей",
+            "Цена со скидкой - \((product?.extended.basicPriceU ?? 0) / 100) рублей",
+            "Конечная цена - \((product?.salePriceU ?? 0) / 100) рублей",
+            "Цена с промокодом - \((product?.extended.promoPriceU ?? 0) / 100) рублей",
+            "Рейтинг - \(product?.rating ?? 0) звезд",
+            "Кол-во отзывов - \(product?.feedbacks ?? 0) отзывов",
             "Цвет - \(product?.colors[0].name ?? "-")",
-            
-            
         ]
         cell.textLabel?.text = objects[indexPath.row]
         return cell
