@@ -12,6 +12,7 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     let decoder = JSONDecoder()
     var dataSource = [Product]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         createTable()
@@ -35,19 +36,25 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: - UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return dataSource.count
+        return 5
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      
         let cell = tableView.dequeueReusableCell(withIdentifier: identifire, for: indexPath)
-        let product = dataSource[indexPath.row]
-        cell.textLabel?.text = product.name
-        cell.detailTextLabel?.text = String(product.priceU)
+        let product = dataSource.first
+        let objects = [
+            product?.name,
+            product?.brand,
+            String(product?.priceU ?? 0),
+            String(product?.sale ?? 0),
+            String(product?.salePriceU ?? 0)
+        ]
+        cell.textLabel?.text = objects[indexPath.row]
         return cell
     }
     
@@ -56,17 +63,14 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         session.dataTask(with: urlData) { [weak self] (data, response, error) in
             guard let strongSelf = self else {return}
-            
             if error == nil, let parsData = data {
-                
+              
                 guard let welcome = try? strongSelf.decoder.decode(Welcome.self, from: parsData) else {return}
                 strongSelf.dataSource = welcome.data.products
-                
                 // Запускам в главном потоке
                 DispatchQueue.main.async {
                     strongSelf.tableView.reloadData()
                 }
-                
             }
             else {
                 print("Error \(error?.localizedDescription)")
