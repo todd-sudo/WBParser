@@ -3,6 +3,8 @@ import UIKit
 
 class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var productImage: UIImageView!
+    
     var productId: String = ""
 
     var tableView = UITableView()
@@ -17,6 +19,7 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         super.viewDidLoad()
         createTable()
         getProduct(productId: productId)
+        dowloadImage()
     }
     
     func createTable() {
@@ -26,6 +29,8 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.tableView.dataSource = self
         tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(tableView)
+        
+        tableView.frame = CGRect(x: 0, y: 356, width: tableView.frame.width, height: tableView.frame.height)
         
     }
     
@@ -50,6 +55,7 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         var qty = 0
         let sizes = product?.sizes ?? []
+        
         for size in sizes{
             for stock in size.stocks {
                 qty += stock.qty
@@ -92,6 +98,23 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 print("Error \(error?.localizedDescription)")
             }
         }.resume()
+    }
+    
+    func generateLinkImage(_ productID: String) -> String{
+        let genID = productID.dropLast(4) + "0000"
+        let imageUrl = "https://images.wbstatic.net/big/new/\(genID)/\(productID)-1.jpg"
+        return imageUrl
+    }
+    
+    func dowloadImage() {
+        let imageURL = generateLinkImage(productId)
+        DispatchQueue.main.async {
+            if let url = URL(string: imageURL) {
+                if let data = try? Data(contentsOf: url){
+                    self.productImage.image = UIImage(data: data)
+                }
+            }
+        }
     }
     
 }
