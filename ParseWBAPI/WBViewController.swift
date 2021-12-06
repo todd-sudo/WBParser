@@ -48,11 +48,19 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         let cell = tableView.dequeueReusableCell(withIdentifier: identifire, for: indexPath)
         let product = dataSource.first
         let objects = [
-            product?.name,
-            product?.brand,
-            String(product?.priceU ?? 0),
-            String(product?.sale ?? 0),
-            String(product?.salePriceU ?? 0)
+            "Название - \(product?.name ?? "-")",
+            "Бренд - \(product?.brand ?? "-")",
+            "Скидка - \(product?.sale ?? 0)%",
+            "Промокод - \(product?.extended.promoSale ?? 0)%",
+            "Базовая цена - \(product?.priceU ?? 0) рублей",
+            "Цена со скидкой - \(product?.extended.basicPriceU ?? 0) рублей",
+            "Конечная цена - \(product?.salePriceU ?? 0) рублей",
+            "Цена с промокодом - \(product?.extended.promoPriceU ?? 0) рублей",
+            "Рейтинг - \(product?.rating ?? 0)",
+            "Кол-во отзывов\(product?.feedbacks ?? 0)",
+            "Цвет - \(product?.colors[0].name ?? "-")",
+            
+            
         ]
         cell.textLabel?.text = objects[indexPath.row]
         return cell

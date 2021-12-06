@@ -44,7 +44,10 @@ struct Color: Codable {
 
 // MARK: - Extended
 struct Extended: Codable {
-    let basicSale, basicPriceU: Int
+    let basicSale: Int?
+    let basicPriceU: Int?
+    let promoPriceU: Int?
+    let promoSale: Int?
 }
 
 // MARK: - Size
