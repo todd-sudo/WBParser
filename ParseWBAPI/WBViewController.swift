@@ -12,16 +12,27 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     let sessionConfiguration = URLSessionConfiguration.default
     let session = URLSession.shared
     let decoder = JSONDecoder()
-    var dataSource = [Product]()
+    var dataSource: [Product] = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         createTable()
-        getProduct(productId: productId)
-        dowloadImage()
+        let service = Service(
+            tableView: tableView,
+            decoder: decoder,
+            productImage: productImage,
+            dataSource: dataSource
+        )
+
+        service.dowloadImage(productId: self.productId)
+        service.getProduct(productId: self.productId)
+        DispatchQueue.main.async {
+            self.dataSource = service.dataSource
+            service.tableView.reloadData()
+        }
     }
-    
+
     func createTable() {
         self.tableView = UITableView(frame: view.bounds, style: .plain)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.identifire)
@@ -49,7 +60,7 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: identifire, for: indexPath)
         let product = dataSource.first
         
@@ -79,42 +90,4 @@ class WBViewController: UIViewController, UITableViewDelegate, UITableViewDataSo
         cell.textLabel?.text = objects[indexPath.row]
         return cell
     }
-    
-    func getProduct(productId: String) {
-        guard let urlData = URL(string: "https://wbxcatalog-ru.wildberries.ru/nm-2-card/catalog?spp=3&lang=ru&curr=rub&offlineBonus=0&onlineBonus=0&emp=0&locale=ru&nm=\(productId)") else {return}
-        
-        session.dataTask(with: urlData) { [weak self] (data, response, error) in
-            guard let strongSelf = self else {return}
-            if error == nil, let parsData = data {
-              
-                guard let welcome = try? strongSelf.decoder.decode(Welcome.self, from: parsData) else {return}
-                strongSelf.dataSource = welcome.data.products
-                // Запускам в главном потоке
-                DispatchQueue.main.async {
-                    strongSelf.tableView.reloadData()
-                }
-            }
-            else {
-                print("Error \(error?.localizedDescription)")
-            }
-        }.resume()
-    }
-    
-    func generateLinkImage(_ productID: String) -> String{
-        let genID = productID.dropLast(4) + "0000"
-        let imageUrl = "https://images.wbstatic.net/big/new/\(genID)/\(productID)-1.jpg"
-        return imageUrl
-    }
-    
-    func dowloadImage() {
-        let imageURL = generateLinkImage(productId)
-        DispatchQueue.main.async {
-            if let url = URL(string: imageURL) {
-                if let data = try? Data(contentsOf: url){
-                    self.productImage.image = UIImage(data: data)
-                }
-            }
-        }
-    }
-    
 }
